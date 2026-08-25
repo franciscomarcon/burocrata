@@ -15,15 +15,9 @@ public class Diploma extends Certificado {
 
     @Override
     public boolean equals(Object objeto) {
-        if (!super.equals(objeto)) {
-            return false;
-        }
-        Diploma diploma = (Diploma) objeto;
-        return Objects.equals(habilitacao, diploma.habilitacao);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), habilitacao);
     }
 }
