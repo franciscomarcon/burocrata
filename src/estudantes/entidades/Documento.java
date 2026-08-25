@@ -35,6 +35,6 @@ public abstract class Documento {
 
     @Override
     public int hashCode() {
-        
+        return Objects.hash(criador, codigoCurso, paginas);
     }
 }
