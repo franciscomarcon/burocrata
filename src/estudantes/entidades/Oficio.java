@@ -14,15 +14,9 @@ public class Oficio extends Deliberacao {
 
     @Override
     public boolean equals(Object objeto) {
-        if (!super.equals(objeto)) {
-            return false;
-        }
-        Oficio oficio = (Oficio) objeto;
-        return Objects.equals(destinatario, oficio.destinatario);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), destinatario);
     }
 }

@@ -14,15 +14,9 @@ public class Portaria extends Norma {
 
     @Override
     public boolean equals(Object objeto) {
-        if (!super.equals(objeto)) {
-            return false;
-        }
-        Portaria portaria = (Portaria) objeto;
-        return anoInicio == portaria.anoInicio;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), anoInicio);
     }
 }

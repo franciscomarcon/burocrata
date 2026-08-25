@@ -14,15 +14,9 @@ public class Edital extends Norma {
 
     @Override
     public boolean equals(Object objeto) {
-        if (!super.equals(objeto)) {
-            return false;
         }
-        Edital edital = (Edital) objeto;
-        return Arrays.equals(responsaveis, edital.responsaveis);
-    }
 
     @Override
     public int hashCode() {
-        return 31 * super.hashCode() + Arrays.hashCode(responsaveis);
-    }
+        }
 }

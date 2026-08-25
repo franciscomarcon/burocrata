@@ -13,15 +13,9 @@ public abstract class Deliberacao extends DocumentoAdministrativo {
 
     @Override
     public boolean equals(Object objeto) {
-        if (!super.equals(objeto)) {
-            return false;
         }
-        Deliberacao deliberacao = (Deliberacao) objeto;
-        return Objects.equals(texto, deliberacao.texto);
-    }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), texto);
-    }
+        }
 }

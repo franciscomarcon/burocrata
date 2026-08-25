@@ -18,17 +18,9 @@ public class Norma extends DocumentoAdministrativo {
 
     @Override
     public boolean equals(Object objeto) {
-        if (!super.equals(objeto)) {
-            return false;
-        }
-        Norma norma = (Norma) objeto;
-        return numero == norma.numero
-                && valido == norma.valido
-                && Objects.equals(texto, norma.texto);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), numero, valido, texto);
     }
 }
