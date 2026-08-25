@@ -10,11 +10,9 @@ public abstract class DocumentoAdministrativo extends Documento {
 
     @Override
     public boolean equals(Object objeto) {
-        return super.equals(objeto);
-    }
+        }
 
     @Override
     public int hashCode() {
-        return super.hashCode();
-    }
+        }
 }

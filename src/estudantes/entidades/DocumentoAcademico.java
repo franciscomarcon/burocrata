@@ -14,15 +14,9 @@ public abstract class DocumentoAcademico extends Documento {
 
     @Override
     public boolean equals(Object objeto) {
-        if (!super.equals(objeto)) {
-            return false;
         }
-        DocumentoAcademico documento = (DocumentoAcademico) objeto;
-        return autenticacao == documento.autenticacao;
-    }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), autenticacao);
-    }
+        }
 }
