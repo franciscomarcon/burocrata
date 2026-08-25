@@ -23,7 +23,9 @@ public abstract class Documento {
 
     @Override
     public boolean equals(Object objeto) {
-        
+        if (this == objeto) return true;
+
+        if (objeto == null || getClass() !objeto.getClass()) return false;
     }
 
     @Override
