@@ -26,6 +26,11 @@ public abstract class Documento {
         if (this == objeto) return true;
 
         if (objeto == null || getClass() !objeto.getClass()) return false;
+
+        Documento that = (Documento) o;
+
+        return paginas == that.paginas && Objects.equals(criador, that.criador) &&
+        Objects.equals(codigoCurso, that.codigoCurso); //Ia nos mostrou essa função ao invés de criador.equals(that.criador)
     }
 
     @Override
