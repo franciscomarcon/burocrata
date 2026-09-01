@@ -17,10 +17,20 @@ public class Norma extends DocumentoAdministrativo {
     }
 
     @Override
-    public boolean equals(Object objeto) {
+    public boolean equals(Object obj) {
+        if (this == obj){
+            return true;
+        }
+        if (obj == null || getClass()!=obj.getClass()){
+            return false;
+        }
+        Norma norma = (Norma)obj;
+        return super.equals(obj) && numero == norma.numero && Objects.equals(valido, norma.valido)
+        && Objects.equals(norma.texto, texto);  
     }
 
     @Override
     public int hashCode() {
+        return Objects.hash(super.hashCode(), numero, valido, texto);
     }
 }

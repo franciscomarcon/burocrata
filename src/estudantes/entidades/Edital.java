@@ -1,6 +1,8 @@
 package estudantes.entidades;
 
 import java.util.Arrays;
+import java.util.Objects;
+
 import professor.entidades.CodigoCurso;
 
 public class Edital extends Norma {
@@ -13,10 +15,19 @@ public class Edital extends Norma {
     }
 
     @Override
-    public boolean equals(Object objeto) {
+    public boolean equals(Object obj) {
+        if (this == obj){
+            return true;
+        }
+        if (obj == null || getClass()!=obj.getClass()){
+            return false;
+        }
+        Edital edital = (Edital)obj;
+        return super.equals(obj) && Objects.equals(edital.responsaveis, responsaveis);  
         }
 
     @Override
     public int hashCode() {
+        return Objects.hash(super.hashCode(), responsaveis);
         }
 }

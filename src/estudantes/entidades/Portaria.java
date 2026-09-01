@@ -13,10 +13,19 @@ public class Portaria extends Norma {
     }
 
     @Override
-    public boolean equals(Object objeto) {
+    public boolean equals(Object obj) {
+        if (this == obj){
+            return true;
+        }
+        if (obj == null || getClass()!=obj.getClass()){
+            return false;
+        }
+        Portaria portaria = (Portaria)obj;
+        return super.equals(obj) && anoInicio==portaria.anoInicio;  
     }
 
     @Override
     public int hashCode() {
+        return Objects.hash(super.hashCode(), anoInicio);
     }
 }

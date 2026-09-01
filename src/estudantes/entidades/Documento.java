@@ -25,9 +25,9 @@ public abstract class Documento {
     public boolean equals(Object objeto) {
         if (this == objeto) return true;
 
-        if (objeto == null || getClass() !objeto.getClass()) return false;
+        if (objeto == null || getClass() != objeto.getClass()) return false;
 
-        Documento that = (Documento) o;
+        Documento that = (Documento) objeto;
 
         return paginas == that.paginas && Objects.equals(criador, that.criador) &&
         Objects.equals(codigoCurso, that.codigoCurso); //Ia nos mostrou essa função ao invés de criador.equals(that.criador)
@@ -35,6 +35,6 @@ public abstract class Documento {
 
     @Override
     public int hashCode() {
-        return Objects.hash(criador, codigoCurso, paginas);//aaaa
+        return Objects.hash(criador, codigoCurso, paginas);//hashcode base
     }
 }

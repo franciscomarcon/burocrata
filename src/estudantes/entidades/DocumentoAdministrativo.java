@@ -1,5 +1,7 @@
 package estudantes.entidades;
 
+import java.util.Objects;
+
 import professor.entidades.CodigoCurso;
 
 public abstract class DocumentoAdministrativo extends Documento {
@@ -9,10 +11,18 @@ public abstract class DocumentoAdministrativo extends Documento {
     }
 
     @Override
-    public boolean equals(Object objeto) {
+    public boolean equals(Object obj) {
+        if (this == obj){
+            return true;
+        }
+        if (obj == null || getClass()!=obj.getClass()){
+            return false;
+        }
+        return super.equals(obj);
         }
 
     @Override
     public int hashCode() {
+        return Objects.hash(super.hashCode());
         }
 }
