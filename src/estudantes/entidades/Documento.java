@@ -23,18 +23,26 @@ public abstract class Documento {
 
     @Override
     public boolean equals(Object objeto) {
-        if (this == objeto) return true;
+        if (this == objeto) return true; //se ele é ele mesmo, retorna verdade
 
-        if (objeto == null || getClass() != objeto.getClass()) return false;
+        if (objeto == null || getClass() != objeto.getClass()) return false; //se ele nao existe, ou as classes nao sao iguais, eh falso
 
-        Documento that = (Documento) objeto;
+        Documento that = (Documento) objeto; //cria novo objeto, com a classe Documento, que recebe a entrada
 
-        return paginas == that.paginas && Objects.equals(criador, that.criador) &&
+        return paginas == that.paginas && Objects.equals(criador, that.criador) && // verifica cada atributo
         Objects.equals(codigoCurso, that.codigoCurso); //Ia nos mostrou essa função ao invés de criador.equals(that.criador)
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(criador, codigoCurso, paginas);//hashcode base
+    }
+
+    public int getPaginas() { //adicionei pois o no arquivo Processo pede essa função, sla ne
+        return paginas;
+    }
+
+    public CodigoCurso getCodigoCurso() { //mesma coisa, so que para universidade
+        return codigoCurso;
     }
 }

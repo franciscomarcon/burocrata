@@ -13,7 +13,7 @@ public abstract class DocumentoAdministrativo extends Documento {
     @Override
     public boolean equals(Object obj) {
         if (this == obj){
-            return true;
+            return true;//quase igual a classe doc essa parte
         }
         if (obj == null || getClass()!=obj.getClass()){
             return false;
@@ -23,6 +23,6 @@ public abstract class DocumentoAdministrativo extends Documento {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode());
+        return Objects.hash(super.hashCode()); //utiliza a função da classe documento
         }
 }

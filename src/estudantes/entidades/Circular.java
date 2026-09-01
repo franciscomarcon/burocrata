@@ -16,7 +16,7 @@ public class Circular extends Deliberacao {
 
     @Override
     public boolean equals(Object objeto) {
-    if (this == objeto) return true;
+    if (this == objeto) return true;//equals vai sempre ser quase a mesma coisa
 
         if (objeto == null || getClass() != objeto.getClass()) return false;
 
@@ -29,6 +29,10 @@ public class Circular extends Deliberacao {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), destinatarios);
+        return Objects.hash(super.hashCode(), destinatarios);//hashcode, usando classe super e novo atributo
+    }
+
+    public String[] getDestinatarios() {
+        return destinatarios;
     }
 }

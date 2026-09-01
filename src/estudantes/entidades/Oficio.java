@@ -14,7 +14,7 @@ public class Oficio extends Deliberacao {
 
     @Override
     public boolean equals(Object objeto) {
-        if (this == objeto) return true;
+        if (this == objeto) return true;//equals vai sempre ser quase a mesma coisa
 
         if (objeto == null || getClass() != objeto.getClass()) return false;
 
@@ -26,6 +26,10 @@ public class Oficio extends Deliberacao {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(),destinatario);
+        return Objects.hash(super.hashCode(),destinatario);//hashcode, usando classe super e novo atributo
+    }
+
+    public String getDestinatario() {
+        return destinatario;
     }
 }

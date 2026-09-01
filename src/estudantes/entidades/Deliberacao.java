@@ -13,7 +13,7 @@ public abstract class Deliberacao extends DocumentoAdministrativo {
 
     @Override
     public boolean equals(Object objeto) {
-        if (this == objeto) return true;
+        if (this == objeto) return true; ;//equals vai sempre ser quase a mesma coisa
 
         if (objeto == null || getClass() != objeto.getClass()) return false;
 
@@ -24,6 +24,6 @@ public abstract class Deliberacao extends DocumentoAdministrativo {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(),texto);
+        return Objects.hash(super.hashCode(),texto);//utiliza função da classe doc_adm, porem junto com o novo atributo
         }
 }
