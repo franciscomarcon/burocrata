@@ -33,4 +33,8 @@ public class Norma extends DocumentoAdministrativo {
     public int hashCode() {
         return Objects.hash(super.hashCode(), numero, valido, texto);
     }
+
+    public boolean isValido() {
+        return valido;
+    }
 }
