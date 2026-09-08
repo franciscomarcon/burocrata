@@ -1,5 +1,9 @@
 package estudantes.entidades;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 import professor.entidades.*;
 
 /**
@@ -58,6 +62,127 @@ public class Burocrata {
     public void trabalhar(){
         
     }
+
+    /* começo de código gerado por IA */
+    /**
+     * Verifica se um documento pode ser colocado em um processo sem violar as
+     * regras administrativas ou ultrapassar o limite de páginas da pasta.
+     *
+     * @param documento documento que se deseja colocar no processo
+     * @param processo processo que receberia o documento
+     * @return true se o documento for compatível com o conteúdo do processo
+     */
+    public boolean documentoAptoParaProcesso(Documento documento, Processo processo) {
+        if (documento == null || processo == null) {
+            return false;
+        }
+
+        // Avalia o conteúdo atual da pasta junto com o novo documento.
+        Documento[] documentosDoProcesso = processo.pegarCopiaDoProcesso();
+        Documento[] documentosAvaliados = Arrays.copyOf(documentosDoProcesso,
+                documentosDoProcesso.length + 1);
+        documentosAvaliados[documentosDoProcesso.length] = documento;
+
+        int totalDePaginas = 0;
+        boolean possuiGraduacao = false;
+        boolean possuiPosGraduacao = false;
+        boolean possuiAdministrativo = false;
+        boolean possuiAcademico = false;
+        boolean possuiDiploma = false;
+        boolean possuiDocumentoIncompativelComDiploma = false;
+        String categoriaDosAtestados = null;
+        boolean encontrouAtestado = false;
+        Set<String> destinatariosComuns = null;
+
+        for (Documento documentoAvaliado : documentosAvaliados) {
+            // Soma as páginas e identifica se o curso é de graduação ou pós.
+            totalDePaginas += documentoAvaliado.getPaginas();
+            if (totalDePaginas > 250) {
+                return false;
+            }
+
+            CodigoCurso codigoCurso = documentoAvaliado.getCodigoCurso();
+            if (codigoCurso == CodigoCurso.POS_GRADUACAO_COMPUTACAO
+                    || codigoCurso == CodigoCurso.POS_GRADUACAO_ENGENHARIA_ELETRICA
+                    || codigoCurso == CodigoCurso.POS_GRADUACAO_MICROELETRONICA) {
+                possuiPosGraduacao = true;
+            } else {
+                possuiGraduacao = true;
+            }
+            if (possuiGraduacao && possuiPosGraduacao) {
+                return false;
+            }
+
+            // Atas não entram nessa classificação e podem acompanhar ambos os tipos.
+            if (documentoAvaliado instanceof DocumentoAdministrativo) {
+                possuiAdministrativo = true;
+            } else if (documentoAvaliado instanceof DocumentoAcademico) {
+                possuiAcademico = true;
+            }
+            if (possuiAdministrativo && possuiAcademico) {
+                return false;
+            }
+
+            // Portarias e editais válidos com 100 páginas ou mais devem ficar sozinhos.
+            if (documentoAvaliado instanceof Norma) {
+                Norma norma = (Norma) documentoAvaliado;
+                if ((norma instanceof Portaria || norma instanceof Edital)
+                        && norma.getPaginas() >= 100 && norma.isValido()) {
+                    if (documentosAvaliados.length > 1) {
+                        return false;
+                    }
+                }
+            }
+
+            // Mantém somente os destinatários comuns entre ofícios e circulares.
+            Set<String> destinatariosDoDocumento = null;
+            if (documentoAvaliado instanceof Oficio) {
+                Oficio oficio = (Oficio) documentoAvaliado;
+                destinatariosDoDocumento = new HashSet<>();
+                destinatariosDoDocumento.add(oficio.getDestinatario());
+            } else if (documentoAvaliado instanceof Circular) {
+                Circular circular = (Circular) documentoAvaliado;
+                destinatariosDoDocumento = new HashSet<>(
+                        Arrays.asList(circular.getDestinatarios()));
+            }
+
+            if (destinatariosDoDocumento != null) {
+                if (destinatariosComuns == null) {
+                    destinatariosComuns = destinatariosDoDocumento;
+                } else {
+                    destinatariosComuns.retainAll(destinatariosDoDocumento);
+                }
+                if (destinatariosComuns.isEmpty()) {
+                    return false;
+                }
+            }
+
+            // Diplomas só podem acompanhar certificados, outros diplomas ou atas.
+            if (documentoAvaliado instanceof Diploma) {
+                possuiDiploma = true;
+            } else if (!(documentoAvaliado instanceof Certificado)
+                    && !(documentoAvaliado instanceof Ata)) {
+                possuiDocumentoIncompativelComDiploma = true;
+            }
+            if (possuiDiploma && possuiDocumentoIncompativelComDiploma) {
+                return false;
+            }
+
+            // Todos os atestados da pasta devem ter a mesma categoria.
+            if (documentoAvaliado instanceof Atestado) {
+                Atestado atestado = (Atestado) documentoAvaliado;
+                if (!encontrouAtestado) {
+                    categoriaDosAtestados = atestado.getCategoria();
+                    encontrouAtestado = true;
+                } else if (!Objects.equals(categoriaDosAtestados, atestado.getCategoria())) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+    /* fim de código gerado por IA */
     
     /**
      * Retorna o valor atual de estresse do burocrata.
