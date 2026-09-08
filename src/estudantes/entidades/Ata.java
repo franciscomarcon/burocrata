@@ -19,11 +19,20 @@ public class Ata extends Documento {
 
     @Override
     public boolean equals(Object objeto) {
-        
+        if (this == objeto) return true;
+
+        if (objeto == null || getClass() != objeto.getClass()) return false;
+
+        Ata ata = (Ata) objeto;
+
+        return super.equals(objeto) && numero == ata.numero && Objects.equals(texto, ata.texto)
+                && Arrays.equals(presentes, ata.presentes);
     }
 
     @Override
     public int hashCode() {
-        
+        int resultado = Objects.hash(super.hashCode(), numero, texto);
+        resultado = 31 * resultado + Arrays.hashCode(presentes);
+        return resultado;
     }
 }

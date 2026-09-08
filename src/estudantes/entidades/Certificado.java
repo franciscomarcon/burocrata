@@ -14,9 +14,17 @@ public class Certificado extends Registro {
 
     @Override
     public boolean equals(Object objeto) {
-        }
+        if (this == objeto) return true;
+
+        if (objeto == null || getClass() != objeto.getClass()) return false;
+
+        Certificado certificado = (Certificado) objeto;
+
+        return super.equals(objeto) && Objects.equals(descricao, certificado.descricao);
+    }
 
     @Override
     public int hashCode() {
-        }
+        return Objects.hash(super.hashCode(), descricao);
+    }
 }

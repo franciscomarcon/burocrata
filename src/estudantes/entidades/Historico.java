@@ -18,9 +18,20 @@ public class Historico extends Registro {
 
     @Override
     public boolean equals(Object objeto) {
-        }
+        if (this == objeto) return true;
+
+        if (objeto == null || getClass() != objeto.getClass()) return false;
+
+        Historico historico = (Historico) objeto;
+
+        return super.equals(objeto) && Double.compare(coeficiente, historico.coeficiente) == 0
+                && Arrays.equals(componentes, historico.componentes);
+    }
 
     @Override
     public int hashCode() {
-        }
+        int resultado = Objects.hash(super.hashCode(), coeficiente);
+        resultado = 31 * resultado + Arrays.hashCode(componentes);
+        return resultado;
+    }
 }

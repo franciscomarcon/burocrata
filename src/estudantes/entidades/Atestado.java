@@ -17,9 +17,18 @@ public class Atestado extends Registro {
 
     @Override
     public boolean equals(Object objeto) {
+        if (this == objeto) return true;
+
+        if (objeto == null || getClass() != objeto.getClass()) return false;
+
+        Atestado atestado = (Atestado) objeto;
+
+        return super.equals(objeto) && Objects.equals(descricao, atestado.descricao)
+                && Objects.equals(categoria, atestado.categoria);
     }
 
     @Override
     public int hashCode() {
+        return Objects.hash(super.hashCode(), descricao, categoria);
     }
 }

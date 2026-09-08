@@ -14,9 +14,17 @@ public abstract class DocumentoAcademico extends Documento {
 
     @Override
     public boolean equals(Object objeto) {
-        }
+        if (this == objeto) return true;
+
+        if (objeto == null || getClass() != objeto.getClass()) return false;
+
+        DocumentoAcademico documentoAcademico = (DocumentoAcademico) objeto;
+
+        return super.equals(objeto) && autenticacao == documentoAcademico.autenticacao;
+    }
 
     @Override
     public int hashCode() {
-        }
+        return Objects.hash(super.hashCode(), autenticacao);
+    }
 }

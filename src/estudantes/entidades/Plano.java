@@ -17,9 +17,20 @@ public class Plano extends DocumentoAcademico {
             
     @Override
     public boolean equals(Object objeto) {
+        if (this == objeto) return true;
+
+        if (objeto == null || getClass() != objeto.getClass()) return false;
+
+        Plano plano = (Plano) objeto;
+
+        return super.equals(objeto) && Objects.equals(responsavel, plano.responsavel)
+                && Arrays.equals(planejamento, plano.planejamento);
     }
 
     @Override
     public int hashCode() {
+        int resultado = Objects.hash(super.hashCode(), responsavel);
+        resultado = 31 * resultado + Arrays.hashCode(planejamento);
+        return resultado;
     }
 }
