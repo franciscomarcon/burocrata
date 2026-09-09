@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import professor.entidades.*;
+import java.util.Random;
 
 /**
  * Classe que traz a lógica do algoritmo de organização e despacho de processos.
@@ -20,6 +21,7 @@ public class Burocrata {
     private int estresse = 0;
     private Mesa mesa;
     private Universidade universidade;
+    public static final int MINIMO_PAGINAS = 200;
     
     /**
      * Construtor de Burocrata.
@@ -60,17 +62,25 @@ public class Burocrata {
      * @see professor.entidades.Universidade#devolverDocumentoParaMonteDoCurso(estudantes.entidades.Documento, professor.entidades.CodigoCurso) 
      */
     public void trabalhar(){
-        for (CodigoCurso codigo : CodigoCurso.values()){
-            Documento[] documentos = this.universidade.pegarCopiaDoMonteDoCurso(codigo);
-            for (Documento documento : documentos){
-                for(Processo processo : mesa.getProcessos()){
-                    if (documentoAptoParaProcesso(documento, processo)){
+        CodigoCurso[] codigos = CodigoCurso.values();
+        Random gerador = new Random();
+        int j = gerador.nextInt(codigos.length);
+        for (int i = 0; i < 10; i++) {
+            CodigoCurso codigo = codigos[j];
+            Documento[] documentos =
+                    universidade.pegarCopiaDoMonteDoCurso(codigo);
+
+            for (Documento documento : documentos) {
+                for (Processo processo : mesa.getProcessos()) {
+                    if (documentoAptoParaProcesso(documento, processo)) {
                         processo.adicionarDocumento(documento);
-                        this.universidade.removerDocumentoDoMonteDoCurso(documento, codigo);
+                        universidade.removerDocumentoDoMonteDoCurso(documento, codigo);
                         break;
                     }
-                } 
+                }
             }
+            
+            j = (j + 1) % codigos.length;
         }
 
         for (Processo processo : mesa.getProcessos()){
@@ -83,13 +93,40 @@ public class Burocrata {
     }
 
     public boolean aptoParaDespachar(Processo processo){
-        if (contarPaginas_(processo)<99){
+        if (DocEssencial(processo)){
+            return true;
+        }
+        if (contarPaginas_(processo)<=MINIMO_PAGINAS){
             return false;
         }
         if (apenasAtas(processo)){
             return false;
         }
         return true;
+        }
+        
+    public boolean DocEssencial(Processo processo) {
+        if (processo == null) {
+            return false;
+        }
+
+        Documento[] documentos = processo.pegarCopiaDoProcesso();
+
+        if (documentos.length == 0) {
+            return false;
+        }
+
+        Documento documentoAvaliado = documentos[0];
+
+        if (documentoAvaliado instanceof Norma) {
+            Norma norma = (Norma) documentoAvaliado;
+
+            return (norma instanceof Portaria || norma instanceof Edital)
+                    && norma.getPaginas() >= 100
+                    && norma.isValido();
+        }
+
+        return false;
     }
 
     public boolean apenasAtas(Processo processo){
@@ -98,7 +135,9 @@ public class Burocrata {
                 return false;
             }
         }
-        return true;
+        if (processo.pegarCopiaDoProcesso().length != 0) return true;
+
+        return false;
     }
 
     public int contarPaginas_(Processo processo){
