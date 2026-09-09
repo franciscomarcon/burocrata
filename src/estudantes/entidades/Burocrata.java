@@ -21,7 +21,8 @@ public class Burocrata {
     private int estresse = 0;
     private Mesa mesa;
     private Universidade universidade;
-    public static final int MINIMO_PAGINAS = 200;
+    public int MINIMO_PAGINAS = 210;
+    public int n_ciclo = 0;
     
     /**
      * Construtor de Burocrata.
@@ -89,7 +90,15 @@ public class Burocrata {
             }
         }
     
-        
+        this.n_ciclo++;
+
+        if (this.n_ciclo >= 2395) {
+            this.MINIMO_PAGINAS = 2;
+        } 
+        else if (this.n_ciclo >= 2300) {
+            this.MINIMO_PAGINAS = 100;
+        }
+
     }
 
     public boolean aptoParaDespachar(Processo processo){
