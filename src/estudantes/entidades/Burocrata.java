@@ -60,7 +60,53 @@ public class Burocrata {
      * @see professor.entidades.Universidade#devolverDocumentoParaMonteDoCurso(estudantes.entidades.Documento, professor.entidades.CodigoCurso) 
      */
     public void trabalhar(){
+        for (CodigoCurso codigo : CodigoCurso.values()){
+            Documento[] documentos = this.universidade.pegarCopiaDoMonteDoCurso(codigo);
+            for (Documento documento : documentos){
+                for(Processo processo : mesa.getProcessos()){
+                    if (documentoAptoParaProcesso(documento, processo)){
+                        processo.adicionarDocumento(documento);
+                        this.universidade.removerDocumentoDoMonteDoCurso(documento, codigo);
+                        break;
+                    }
+                } 
+            }
+        }
+
+        for (Processo processo : mesa.getProcessos()){
+            if (aptoParaDespachar(processo)){
+                universidade.despachar(processo);
+            }
+        }
+    
         
+    }
+
+    public boolean aptoParaDespachar(Processo processo){
+        if (contarPaginas_(processo)<99){
+            return false;
+        }
+        if (apenasAtas(processo)){
+            return false;
+        }
+        return true;
+    }
+
+    public boolean apenasAtas(Processo processo){
+        for(Documento documento : processo.pegarCopiaDoProcesso()){
+            if(documento.getClass()!=Ata.class){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public int contarPaginas_(Processo processo){
+        int paginas = 0;
+        for(Documento documento : processo.pegarCopiaDoProcesso()){
+            paginas += documento.getPaginas();
+        }
+        return paginas;
     }
 
     /* começo de código gerado por IA */
@@ -183,6 +229,7 @@ public class Burocrata {
         return true;
     }
     /* fim de código gerado por IA */
+
     
     /**
      * Retorna o valor atual de estresse do burocrata.
