@@ -92,11 +92,11 @@ public class Burocrata {
     
         this.n_ciclo++;
 
-        if (this.n_ciclo >= 2395) {
+        if (this.n_ciclo >= 2390) {
             this.MINIMO_PAGINAS = 2;
         } 
-        else if (this.n_ciclo >= 2300) {
-            this.MINIMO_PAGINAS = 100;
+        else if (this.n_ciclo >= 2200) {
+            this.MINIMO_PAGINAS = 50;
         }
 
     }
