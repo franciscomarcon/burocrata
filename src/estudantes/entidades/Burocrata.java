@@ -21,7 +21,7 @@ public class Burocrata {
     private int estresse = 0;
     private Mesa mesa;
     private Universidade universidade;
-    public int MINIMO_PAGINAS = 210;
+    public int MINIMO_PAGINAS = 245;
     public int n_ciclo = 0;
     
     /**
@@ -91,14 +91,14 @@ public class Burocrata {
         }
     
         this.n_ciclo++;
-
-        if (this.n_ciclo >= 2390) {
+        if (this.n_ciclo >= 2370) {
             this.MINIMO_PAGINAS = 2;
+            System.out.println("acabando");
         } 
-        else if (this.n_ciclo >= 2200) {
-            this.MINIMO_PAGINAS = 50;
-        }
-
+        else if (this.n_ciclo >= 2300) {
+            this.MINIMO_PAGINAS = 220;
+            System.out.println("passou p/220");
+        } 
     }
 
     public boolean aptoParaDespachar(Processo processo){
