@@ -1,14 +1,18 @@
 package estudantes.entidades;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import professor.entidades.*;
 
 /**
- * Classe que traz a lógica do algoritmo de organização e despacho de processos.
+ * Organiza os documentos disponíveis nos montes dos cursos e despacha os
+ * processos completos para a secretaria acadêmica.
+ *
+ * A estratégia atual prioriza documentos acadêmicos, que ocupam poucas páginas,
+ * para concentrar mais documentos em cada processo sem desrespeitar as regras
+ * administrativas de compatibilidade.
  * <br><br>
  * Você pode incluir novos atributos e métodos nessa classe para criar
  * lógicas mais complexas para o gerenciamento da organização e despacho de 
@@ -18,10 +22,15 @@ import professor.entidades.*;
  * @author coloque os nomes dos autores aqui
  */
 public class Burocrata {
+    /** Quantidade de regras descumpridas durante a simulação. */
     private int estresse = 0;
+    /** Mesa que contém os cinco processos abertos. */
     private Mesa mesa;
+    /** Universidade usada para acessar os montes e despachar processos. */
     private Universidade universidade;
-    public int MINIMO_PAGINAS = 250;
+    /** Quantidade mínima de páginas para o despacho normal de um processo. */
+    public int MINIMO_PAGINAS = 245;
+    /** Contador de ciclos usado para alternar o curso processado primeiro. */
     public int n_ciclo = 0;
     
     /**
@@ -36,7 +45,7 @@ public class Burocrata {
     }
     
     /**
-     * Executa a lógica de criação e despacho dos processos.
+     * Executa um ciclo de organização e despacho de processos.
      * <br><br>
      * Esse método é o único método de controle invocado durante a simulação 
      * da universidade.
@@ -64,17 +73,24 @@ public class Burocrata {
      */
     public void trabalhar(){
         CodigoCurso[] codigos = CodigoCurso.values();
+        // Alterna o curso inicial para não favorecer sempre o mesmo monte.
         int j = n_ciclo % codigos.length;
         for (int i = 0; i < 10; i++) {
             CodigoCurso codigo = codigos[j];
             Documento[] documentos =
                     universidade.pegarCopiaDoMonteDoCurso(codigo);
-            Arrays.sort(documentos, Comparator.comparingInt(Documento::getPaginas));
 
             for (Documento documento : documentos) {
+                // A variante prioriza documentos de uma página para aumentar
+                // a quantidade média de documentos em cada processo.
+                if (!(documento instanceof DocumentoAcademico)) {
+                    continue;
+                }
+
                 Processo melhorProcesso = null;
                 int maiorQuantidadeDeDocumentos = -1;
 
+                // Escolhe a pasta compatível que já concentra mais documentos.
                 for (Processo processo : mesa.getProcessos()) {
                     if (documentoAptoParaProcesso(documento, processo)) {
                         int quantidadeDeDocumentos = processo.contarDocumentos();
@@ -89,6 +105,7 @@ public class Burocrata {
                         && universidade.removerDocumentoDoMonteDoCurso(documento, codigo)) {
                     melhorProcesso.adicionarDocumento(documento);
 
+                    // Uma pasta que atingiu a capacidade pode ser despachada logo.
                     if (contarPaginas_(melhorProcesso) == 250) {
                         universidade.despachar(melhorProcesso);
                     }
@@ -99,6 +116,7 @@ public class Burocrata {
         }
 
         for (Processo processo : mesa.getProcessos()){
+            // Despacha as pastas quase cheias que não contêm apenas atas.
             if (aptoParaDespachar(processo)){
                 universidade.despachar(processo);
             }
@@ -107,6 +125,14 @@ public class Burocrata {
         this.n_ciclo++;
     }
 
+    /**
+     * Informa se um processo está pronto para ser despachado.
+     * Processos com documentos substanciais são enviados sozinhos; os demais
+     * precisam atingir a quantidade mínima de páginas e não podem conter apenas atas.
+     *
+     * @param processo processo avaliado
+     * @return true se o processo puder ser despachado
+     */
     public boolean aptoParaDespachar(Processo processo){
         if (processo == null) {
             return false;
@@ -123,6 +149,13 @@ public class Burocrata {
         return true;
         }
         
+    /**
+     * Identifica processos com uma portaria ou edital válido e substancial.
+     * Esses documentos devem ser despachados sem outros documentos.
+     *
+     * @param processo processo avaliado
+     * @return true se o processo contiver um documento substancial válido
+     */
     public boolean DocEssencial(Processo processo) {
         if (processo == null) {
             return false;
@@ -147,6 +180,12 @@ public class Burocrata {
         return false;
     }
 
+    /**
+     * Verifica se todos os documentos de um processo são atas.
+     *
+     * @param processo processo avaliado
+     * @return true se o processo não estiver vazio e contiver somente atas
+     */
     public boolean apenasAtas(Processo processo){
         if (processo == null) {
             return false;
@@ -161,6 +200,12 @@ public class Burocrata {
         return false;
     }
 
+    /**
+     * Calcula a quantidade total de páginas dos documentos de um processo.
+     *
+     * @param processo processo avaliado
+     * @return total de páginas, ou zero para um processo inexistente
+     */
     public int contarPaginas_(Processo processo){
         if (processo == null) {
             return 0;
