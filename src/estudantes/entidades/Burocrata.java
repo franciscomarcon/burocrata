@@ -1,11 +1,11 @@
 package estudantes.entidades;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import professor.entidades.*;
-import java.util.Random;
 
 /**
  * Classe que traz a lógica do algoritmo de organização e despacho de processos.
@@ -21,7 +21,7 @@ public class Burocrata {
     private int estresse = 0;
     private Mesa mesa;
     private Universidade universidade;
-    public int MINIMO_PAGINAS = 245;
+    public int MINIMO_PAGINAS = 250;
     public int n_ciclo = 0;
     
     /**
@@ -64,23 +64,37 @@ public class Burocrata {
      */
     public void trabalhar(){
         CodigoCurso[] codigos = CodigoCurso.values();
-        Random gerador = new Random();
-        int j = gerador.nextInt(codigos.length);
+        int j = n_ciclo % codigos.length;
         for (int i = 0; i < 10; i++) {
             CodigoCurso codigo = codigos[j];
             Documento[] documentos =
                     universidade.pegarCopiaDoMonteDoCurso(codigo);
+            Arrays.sort(documentos, Comparator.comparingInt(Documento::getPaginas));
 
             for (Documento documento : documentos) {
+                Processo melhorProcesso = null;
+                int maiorQuantidadeDeDocumentos = -1;
+
                 for (Processo processo : mesa.getProcessos()) {
                     if (documentoAptoParaProcesso(documento, processo)) {
-                        processo.adicionarDocumento(documento);
-                        universidade.removerDocumentoDoMonteDoCurso(documento, codigo);
-                        break;
+                        int quantidadeDeDocumentos = processo.contarDocumentos();
+                        if (quantidadeDeDocumentos > maiorQuantidadeDeDocumentos) {
+                            maiorQuantidadeDeDocumentos = quantidadeDeDocumentos;
+                            melhorProcesso = processo;
+                        }
+                    }
+                }
+
+                if (melhorProcesso != null
+                        && universidade.removerDocumentoDoMonteDoCurso(documento, codigo)) {
+                    melhorProcesso.adicionarDocumento(documento);
+
+                    if (contarPaginas_(melhorProcesso) == 250) {
+                        universidade.despachar(melhorProcesso);
                     }
                 }
             }
-            
+
             j = (j + 1) % codigos.length;
         }
 
@@ -89,23 +103,18 @@ public class Burocrata {
                 universidade.despachar(processo);
             }
         }
-    
+
         this.n_ciclo++;
-        if (this.n_ciclo >= 2370) {
-            this.MINIMO_PAGINAS = 2;
-            System.out.println("acabando");
-        } 
-        else if (this.n_ciclo >= 2300) {
-            this.MINIMO_PAGINAS = 220;
-            System.out.println("passou p/220");
-        } 
     }
 
     public boolean aptoParaDespachar(Processo processo){
+        if (processo == null) {
+            return false;
+        }
         if (DocEssencial(processo)){
             return true;
         }
-        if (contarPaginas_(processo)<=MINIMO_PAGINAS){
+        if (contarPaginas_(processo) < MINIMO_PAGINAS){
             return false;
         }
         if (apenasAtas(processo)){
@@ -139,6 +148,9 @@ public class Burocrata {
     }
 
     public boolean apenasAtas(Processo processo){
+        if (processo == null) {
+            return false;
+        }
         for(Documento documento : processo.pegarCopiaDoProcesso()){
             if(documento.getClass()!=Ata.class){
                 return false;
@@ -150,6 +162,9 @@ public class Burocrata {
     }
 
     public int contarPaginas_(Processo processo){
+        if (processo == null) {
+            return 0;
+        }
         int paginas = 0;
         for(Documento documento : processo.pegarCopiaDoProcesso()){
             paginas += documento.getPaginas();
