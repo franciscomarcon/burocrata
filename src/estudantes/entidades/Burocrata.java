@@ -78,7 +78,7 @@ public class Burocrata {
                         universidade.removerDocumentoDoMonteDoCurso(documento, codigo);
                         break;
                     }
-                    else if (documento.getPaginas() > MAX_PAG_DOC || documento instanceof DocumentoAdministrativo){
+                    else if (documento.getPaginas() > MAX_PAG_DOC || documento instanceof DocumentoAdministrativo){ // tirar da pilha documentos grandes e administrativos, 
                         universidade.removerDocumentoDoMonteDoCurso(documento, codigo);
                     }
                 }
