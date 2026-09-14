@@ -21,7 +21,8 @@ public class Burocrata {
     private int estresse = 0;
     private Mesa mesa;
     private Universidade universidade;
-    public int MINIMO_PAGINAS = 245;
+    public int MINIMO_PAGINAS = 249;
+    public int MAX_PAG_DOC = 2;
     public int n_ciclo = 0;
     
     /**
@@ -73,10 +74,13 @@ public class Burocrata {
 
             for (Documento documento : documentos) {
                 for (Processo processo : mesa.getProcessos()) {
-                    if (documentoAptoParaProcesso(documento, processo)) {
+                    if (documento.getPaginas() <= MAX_PAG_DOC && documentoAptoParaProcesso(documento, processo)) {
                         processo.adicionarDocumento(documento);
                         universidade.removerDocumentoDoMonteDoCurso(documento, codigo);
                         break;
+                    }
+                    else if (documento.getPaginas() > MAX_PAG_DOC || documento instanceof DocumentoAdministrativo){
+                        universidade.removerDocumentoDoMonteDoCurso(documento, codigo);
                     }
                 }
             }
@@ -91,14 +95,6 @@ public class Burocrata {
         }
     
         this.n_ciclo++;
-        if (this.n_ciclo >= 2370) {
-            this.MINIMO_PAGINAS = 2;
-            System.out.println("acabando");
-        } 
-        else if (this.n_ciclo >= 2300) {
-            this.MINIMO_PAGINAS = 220;
-            System.out.println("passou p/220");
-        } 
     }
 
     public boolean aptoParaDespachar(Processo processo){
@@ -168,6 +164,10 @@ public class Burocrata {
      */
     public boolean documentoAptoParaProcesso(Documento documento, Processo processo) {
         if (documento == null || processo == null) {
+            return false;
+        }
+
+        if (documento instanceof DocumentoAdministrativo){
             return false;
         }
 
