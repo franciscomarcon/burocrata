@@ -22,8 +22,7 @@ public class Burocrata {
     private Mesa mesa;
     private Universidade universidade;
     public int MINIMO_PAGINAS = 249;
-    public int MAX_PAG_DOC = 2;
-    public int n_ciclo = 0;
+    public int MAX_PAG_DOC = 1;
     
     /**
      * Construtor de Burocrata.
@@ -93,8 +92,6 @@ public class Burocrata {
                 universidade.despachar(processo);
             }
         }
-    
-        this.n_ciclo++;
     }
 
     public boolean aptoParaDespachar(Processo processo){
@@ -167,9 +164,11 @@ public class Burocrata {
             return false;
         }
 
+        // essa parte foi nós
         if (documento instanceof DocumentoAdministrativo){
             return false;
         }
+        // fim parte nós
 
         // Avalia o conteúdo atual da pasta junto com o novo documento.
         Documento[] documentosDoProcesso = processo.pegarCopiaDoProcesso();
